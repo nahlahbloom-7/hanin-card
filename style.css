@@ -1,0 +1,1999 @@
+/* =========================================
+   VARIABLES
+========================================= */
+
+:root {
+
+    --white: #f7f6f3;
+    --paper: #efede8;
+
+    --black: #141414;
+    --black-soft: #292929;
+
+    --gray: #8d8982;
+    --gray-light: #d8d4ce;
+
+    --brown: #756354;
+
+    /* الأزرق يستخدم للتفاعل فقط */
+    --blue: #547d9b;
+    --blue-soft: rgba(84, 125, 155, 0.28);
+
+    --board-size: min(88vw, 440px);
+}
+
+
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    width: 100%;
+    min-height: 100%;
+}
+
+
+body {
+    width: 100%;
+    min-height: 100svh;
+
+    background: var(--white);
+    color: var(--black);
+
+    font-family: "Cairo", sans-serif;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   EXPERIENCE
+========================================= */
+
+.experience {
+
+    position: relative;
+
+    width: 100%;
+    min-height: 100svh;
+
+    overflow: hidden;
+
+    background:
+        radial-gradient(
+            circle at 50% 12%,
+            rgba(117, 99, 84, 0.045),
+            transparent 34%
+        ),
+
+        var(--white);
+}
+
+
+/* =========================================
+   TOP BAR
+========================================= */
+
+.topbar {
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    padding:
+        calc(22px + env(safe-area-inset-top))
+        25px
+        0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    z-index: 30;
+}
+
+
+.brand {
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color: #3c3a37;
+}
+
+
+.page-number {
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    color: #aaa59e;
+
+    direction: ltr;
+}
+
+
+/* =========================================
+   INTRO
+========================================= */
+
+.intro {
+
+    position: absolute;
+
+    top: 16%;
+
+    left: 0;
+
+    width: 100%;
+
+    text-align: center;
+
+    z-index: 10;
+
+    transition:
+        opacity 0.5s ease,
+        transform 0.7s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.intro.hidden {
+
+    opacity: 0;
+
+    transform: translateY(-18px);
+
+    pointer-events: none;
+}
+
+
+.eyebrow {
+
+    margin-bottom: 13px;
+
+    font-family: "Playfair Display", serif;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color: var(--brown);
+}
+
+
+.intro h1 {
+
+    margin-bottom: 7px;
+
+    font-size: 23px;
+
+    font-weight: 500;
+
+    letter-spacing: -0.3px;
+}
+
+
+.intro p {
+
+    color: #89857f;
+
+    font-size: 11px;
+
+    font-weight: 400;
+}
+
+
+/* =========================================
+   CHESS SECTION
+========================================= */
+
+.chess-section {
+
+    position: absolute;
+
+    top: 31%;
+
+    left: 50%;
+
+    width: var(--board-size);
+
+    transform: translateX(-50%);
+
+    z-index: 8;
+
+    transition:
+        top 1s cubic-bezier(.22, 1, .36, 1),
+        transform 1s cubic-bezier(.22, 1, .36, 1),
+        opacity 1s ease;
+}
+
+
+/*
+    بعد الفوز:
+    الرقعة لا تختفي.
+    فقط تصبح خلفية خافتة جدًا.
+*/
+
+.chess-section.background-mode {
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    opacity: 0.075;
+
+    z-index: 1;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   BOARD FRAME
+========================================= */
+
+.board-frame {
+
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 1;
+
+    padding: 8px;
+
+    background: #191919;
+
+    box-shadow:
+        0 20px 48px rgba(0, 0, 0, 0.13),
+        0 3px 8px rgba(0, 0, 0, 0.08);
+
+    transition:
+        box-shadow 0.8s ease;
+}
+
+
+/* =========================================
+   BOARD
+========================================= */
+
+.board {
+
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+
+    direction: ltr;
+}
+
+
+/* =========================================
+   SQUARE
+========================================= */
+
+.square {
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    user-select: none;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        background-color 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+
+.square.light {
+
+    background: #ece9e3;
+}
+
+
+.square.dark {
+
+    background: #303030;
+}
+
+
+/* =========================================
+   SELECTED SQUARE
+========================================= */
+
+.square.selected {
+
+    box-shadow:
+        inset 0 0 0 3px rgba(84, 125, 155, 0.8);
+}
+
+
+/* =========================================
+   LEGAL MOVE INDICATOR
+========================================= */
+
+.square.legal::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 24%;
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+
+    background: var(--blue);
+
+    opacity: 0.72;
+
+    transform: scale(0.7);
+
+    animation:
+        legalAppear 0.22s cubic-bezier(.22, 1, .36, 1)
+        forwards;
+}
+
+
+@keyframes legalAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform: scale(0.35);
+    }
+
+    to {
+
+        opacity: 0.72;
+
+        transform: scale(0.7);
+    }
+}
+
+
+/* =========================================
+   CAPTURE MOVE
+========================================= */
+
+.square.capture::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 70%;
+    aspect-ratio: 1;
+
+    border-radius: 50%;
+
+    background: transparent;
+
+    border: 3px solid var(--blue);
+
+    opacity: 0;
+
+    animation:
+        captureTarget 0.25s ease forwards;
+}
+
+
+@keyframes captureTarget {
+
+    from {
+
+        opacity: 0;
+
+        transform: scale(0.85);
+    }
+
+    to {
+
+        opacity: 0.85;
+
+        transform: scale(1);
+    }
+}
+
+
+/* =========================================
+   PIECES
+========================================= */
+
+.piece {
+
+    position: relative;
+
+    z-index: 4;
+
+    font-family:
+        "Times New Roman",
+        "DejaVu Serif",
+        serif;
+
+    font-size: clamp(
+        30px,
+        7vw,
+        49px
+    );
+
+    line-height: 1;
+
+    user-select: none;
+
+    pointer-events: none;
+
+    transition:
+        transform 0.38s cubic-bezier(.22, 1, .36, 1),
+        opacity 0.3s ease;
+}
+
+
+/* WHITE */
+
+.white-piece {
+
+    color: #fafafa;
+
+    text-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.85),
+        0 2px 5px rgba(0, 0, 0, 0.35);
+}
+
+
+/* BLACK */
+
+.black-piece {
+
+    color: #0d0d0d;
+
+    text-shadow:
+        0 1px 1px rgba(255, 255, 255, 0.08),
+        0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+
+/* selected queen */
+
+.piece.selected-piece {
+
+    transform:
+        translateY(-3px)
+        scale(1.035);
+}
+
+
+/* =========================================
+   CAPTURE ANIMATION
+========================================= */
+
+.piece.captured {
+
+    animation:
+        pieceCapture 0.34s ease forwards;
+}
+
+
+@keyframes pieceCapture {
+
+    0% {
+
+        opacity: 1;
+
+        transform:
+            scale(1)
+            rotate(0deg);
+    }
+
+    45% {
+
+        opacity: 0.55;
+
+        transform:
+            scale(1.08)
+            rotate(-2deg);
+    }
+
+    100% {
+
+        opacity: 0;
+
+        transform:
+            scale(0.5)
+            rotate(4deg);
+    }
+}
+
+
+/* =========================================
+   STATUS
+========================================= */
+
+.game-status {
+
+    min-height: 20px;
+
+    margin-top: 17px;
+
+    text-align: center;
+
+    color: #817c75;
+
+    font-size: 10px;
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.game-status strong {
+
+    color: var(--black);
+
+    font-weight: 500;
+}
+
+
+/* =========================================
+   CHECKMATE
+========================================= */
+
+.checkmate {
+
+    position: absolute;
+
+    top: calc(
+        31% +
+        var(--board-size) +
+        28px
+    );
+
+    left: 50%;
+
+    width: 100%;
+
+    transform:
+        translate(-50%, 18px);
+
+    text-align: center;
+
+    opacity: 0;
+
+    z-index: 15;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.65s ease,
+        transform 0.8s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.checkmate.show {
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+
+    pointer-events: auto;
+}
+
+
+.checkmate-label {
+
+    margin-bottom: 7px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 11px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color: var(--brown);
+}
+
+
+.checkmate p {
+
+    font-size: 13px;
+
+    color: #3b3936;
+}
+
+
+/* =========================================
+   CONTINUE BUTTON
+========================================= */
+
+.checkmate button {
+
+    margin-top: 15px;
+
+    padding: 8px 21px;
+
+    border: 1px solid #d1cbc3;
+
+    border-radius: 2px;
+
+    background:
+        rgba(255, 255, 255, 0.75);
+
+    color: #393735;
+
+    font-family: "Cairo", sans-serif;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.checkmate button:hover {
+
+    background: #ffffff;
+
+    border-color: #bcb4ab;
+
+    transform: translateY(-2px);
+}
+
+
+.checkmate button:active {
+
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   GREETING
+========================================= */
+
+.greeting {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        75px
+        25px
+        35px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.8s ease;
+}
+
+
+.greeting.show {
+
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+/* =========================================
+   GREETING CARD
+========================================= */
+
+.greeting-card {
+
+    position: relative;
+
+    width: min(
+        560px,
+        100%
+    );
+
+    padding:
+        42px 27px
+        38px;
+
+    text-align: center;
+
+    background:
+        rgba(247, 246, 243, 0.78);
+
+    backdrop-filter:
+        blur(4px);
+
+    -webkit-backdrop-filter:
+        blur(4px);
+
+    border-top:
+        1px solid rgba(117, 99, 84, 0.16);
+
+    border-bottom:
+        1px solid rgba(117, 99, 84, 0.16);
+
+    transform:
+        translateY(25px);
+
+    transition:
+        transform
+        1s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.greeting.show .greeting-card {
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================
+   DECORATIVE LINES
+========================================= */
+
+.decor-line {
+
+    position: absolute;
+
+    width: 34px;
+
+    height: 1px;
+
+    background:
+        var(--brown);
+
+    opacity: 0.45;
+}
+
+
+.top-line {
+
+    top: 19px;
+
+    right: 27px;
+}
+
+
+.bottom-line {
+
+    bottom: 19px;
+
+    left: 27px;
+}
+
+
+/* =========================================
+   GREETING TEXT
+========================================= */
+
+.greeting-to {
+
+    margin-bottom: 18px;
+
+    color: var(--brown);
+
+    font-size: 12px;
+}
+
+
+.greeting h2 {
+
+    margin-bottom: 23px;
+
+    font-size: 22px;
+
+    font-weight: 500;
+}
+
+
+.message {
+
+    max-width: 475px;
+
+    margin: auto;
+
+    color: #55514b;
+
+    font-size: 12.5px;
+
+    line-height: 2.25;
+}
+
+
+.message p {
+
+    margin-bottom: 15px;
+}
+
+
+.message p:last-child {
+
+    margin-bottom: 0;
+}
+
+
+/* =========================================
+   SIGNATURE
+========================================= */
+
+.signature {
+
+    margin-top: 26px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    direction: ltr;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    color: #77716a;
+}
+
+
+/* =========================================
+   FINAL NOTE
+========================================= */
+
+.final-note {
+
+    margin-top: 25px;
+
+    color: #aaa39a;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================
+   FUTURE TRIGGER
+========================================= */
+
+.future-trigger {
+
+    margin-top: 22px;
+
+    padding:
+        8px
+        20px;
+
+    border:
+        1px solid #d1cbc3;
+
+    border-radius: 2px;
+
+    background:
+        rgba(255, 255, 255, 0.55);
+
+    color: #55514b;
+
+    font-family:
+        "Cairo",
+        sans-serif;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.future-trigger:hover {
+
+    background:
+        rgba(255, 255, 255, 0.9);
+
+    border-color:
+        #bcb4ab;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.future-trigger:active {
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================
+   FLOWER DECORATIONS
+========================================= */
+
+.card-flower {
+
+    position: absolute;
+
+    width: 75px;
+
+    height: auto;
+
+    pointer-events: none;
+
+    opacity: 0.85;
+
+    z-index: 5;
+
+    filter:
+        drop-shadow(
+            0 4px 12px
+            rgba(0, 0, 0, 0.06)
+        );
+}
+
+
+/* الوردة العلوية اليسرى */
+
+.top-left-flower {
+
+    top: -25px;
+
+    left: -20px;
+
+    transform:
+        rotate(-20deg);
+}
+
+
+/* الوردة السفلية اليمنى */
+
+.bottom-right-flower {
+
+    bottom: -25px;
+
+    right: -20px;
+
+    transform:
+        rotate(165deg);
+}
+
+
+/* =========================================
+   FUTURE SECTION
+========================================= */
+
+.future-section {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 25;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        75px
+        25px
+        35px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.8s ease;
+}
+
+
+.future-section.show {
+
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+/* =========================================
+   FUTURE INTRO
+========================================= */
+
+.future-intro {
+
+    width: min(
+        520px,
+        100%
+    );
+
+    text-align: center;
+
+    transform:
+        translateY(20px);
+
+    opacity: 1;
+
+    transition:
+        opacity 0.6s ease,
+        transform 0.8s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.future-intro.hidden {
+
+    opacity: 0;
+
+    transform:
+        translateY(-25px);
+
+    pointer-events: none;
+}
+
+
+.future-eyebrow {
+
+    margin-bottom: 14px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color:
+        var(--brown);
+}
+
+
+.future-intro h2 {
+
+    margin-bottom: 12px;
+
+    font-size: 24px;
+
+    font-weight: 500;
+}
+
+
+.future-intro > p {
+
+    color: #77716a;
+
+    font-size: 11px;
+
+    line-height: 2;
+
+}
+
+
+/* =========================================
+   FUTURE TEXTAREA
+========================================= */
+
+.future-input-wrap {
+
+    position: relative;
+
+    width: min(
+        430px,
+        100%
+    );
+
+    margin:
+        30px
+        auto
+        0;
+}
+
+
+.future-input-wrap textarea {
+
+    width: 100%;
+
+    min-height: 115px;
+
+    resize: none;
+
+    border: none;
+
+    outline: none;
+
+    padding:
+        14px
+        5px;
+
+    background:
+        transparent;
+
+    color:
+        var(--black);
+
+    text-align: center;
+
+    font-family:
+        "Cairo",
+        sans-serif;
+
+    font-size: 13px;
+
+    line-height: 2;
+
+    caret-color:
+        var(--brown);
+}
+
+
+.future-input-wrap textarea::placeholder {
+
+    color:
+        #aaa49c;
+
+    opacity: 1;
+}
+
+
+.input-line {
+
+    display: block;
+
+    width: 100%;
+
+    height: 1px;
+
+    background:
+        #d4cec6;
+
+    transition:
+        background 0.25s ease;
+}
+
+
+.future-input-wrap textarea:focus + .input-line {
+
+    background:
+        var(--brown);
+}
+
+
+/* =========================================
+   SAVE BUTTON
+========================================= */
+
+.future-save {
+
+    margin-top: 22px;
+
+    padding:
+        9px
+        24px;
+
+    border:
+        1px solid #cfc8bf;
+
+    border-radius: 2px;
+
+    background:
+        rgba(255, 255, 255, 0.72);
+
+    color:
+        #3f3c38;
+
+    font-family:
+        "Cairo",
+        sans-serif;
+
+    font-size: 10px;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.future-save:hover {
+
+    background:
+        #ffffff;
+
+    border-color:
+        #b8b0a7;
+
+    transform:
+        translateY(-2px);
+}
+
+
+.future-save:active {
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================
+   FUTURE MEMORY
+   تظهر فقط عند وجود رسالة محفوظة
+========================================= */
+
+.future-memory {
+
+    width: min(
+        360px,
+        100%
+    );
+
+    margin:
+        32px
+        auto
+        0;
+
+    padding:
+        18px
+        20px;
+
+    border:
+        1px solid
+        rgba(117, 99, 84, 0.16);
+
+    background:
+        rgba(255, 255, 255, 0.45);
+
+    opacity: 0;
+
+    transform:
+        translateY(10px);
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+}
+
+
+.future-memory.show {
+
+    opacity: 1;
+
+    transform:
+        translateY(0);
+
+    pointer-events: auto;
+}
+
+
+.future-memory-label {
+
+    margin-bottom: 8px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color:
+        var(--brown);
+}
+
+
+.future-memory p {
+
+    margin-bottom: 12px;
+
+    color:
+        #57524c;
+
+    font-size: 11px;
+}
+
+
+.memory-button {
+
+    padding:
+        7px
+        19px;
+
+    border:
+        1px solid #d1cbc3;
+
+    border-radius: 2px;
+
+    background:
+        rgba(255, 255, 255, 0.65);
+
+    color:
+        #494641;
+
+    font-family:
+        "Cairo",
+        sans-serif;
+
+    font-size: 9px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+
+.memory-button:hover {
+
+    background:
+        #ffffff;
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================
+   FUTURE LETTER
+========================================= */
+
+.future-letter {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        70px
+        24px
+        35px;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transform:
+        translateY(25px);
+
+    transition:
+        opacity 0.9s ease,
+        transform 1s cubic-bezier(.22, 1, .36, 1);
+
+    background-color:
+        var(--paper);
+
+    background-image:
+        linear-gradient(
+            rgba(247, 246, 243, 0.78),
+            rgba(247, 246, 243, 0.78)
+        ),
+        url("future-bg.png");
+
+    background-position:
+        center;
+
+    background-size:
+        cover;
+
+    background-repeat:
+        no-repeat;
+}
+
+
+.future-letter.show {
+
+    opacity: 1;
+
+    pointer-events: auto;
+
+    transform:
+        translateY(0);
+}
+
+
+/* =========================================
+   FUTURE LETTER INNER
+========================================= */
+
+.future-letter-inner {
+
+    position: relative;
+
+    width: min(
+        580px,
+        100%
+    );
+
+    max-height: 100%;
+
+    overflow-y: auto;
+
+    padding:
+        36px
+        27px;
+
+    text-align: center;
+
+    background:
+        rgba(247, 246, 243, 0.72);
+
+    backdrop-filter:
+        blur(3px);
+
+    -webkit-backdrop-filter:
+        blur(3px);
+
+    border-top:
+        1px solid
+        rgba(117, 99, 84, 0.18);
+
+    border-bottom:
+        1px solid
+        rgba(117, 99, 84, 0.18);
+}
+
+
+/* =========================================
+   FUTURE DATE
+========================================= */
+
+.future-date {
+
+    margin-bottom: 23px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color:
+        var(--brown);
+}
+
+
+/* =========================================
+   USER MESSAGE
+========================================= */
+
+.future-user-message {
+
+    max-width: 450px;
+
+    margin:
+        0
+        auto;
+
+    color:
+        #252320;
+
+    font-size: 16px;
+
+    line-height: 2.1;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: break-word;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.future-divider {
+
+    display: block;
+
+    width: 35px;
+
+    height: 1px;
+
+    margin:
+        25px
+        auto;
+
+    background:
+        var(--brown);
+
+    opacity:
+        0.45;
+}
+
+
+/* =========================================
+   FIXED FUTURE MESSAGE
+========================================= */
+
+.future-fixed {
+
+    margin: 0;
+
+    color:
+        #55514b;
+
+    font-size: 12.5px;
+
+    line-height: 2.2;
+}
+
+
+/* =========================================
+   REFLECTION
+========================================= */
+
+.future-reflection {
+
+    margin-top: 23px;
+
+    color:
+        #817a72;
+
+    font-size: 10.5px;
+
+    line-height: 2.15;
+}
+
+
+/* =========================================
+   GROWTH
+========================================= */
+
+.future-growth {
+
+    margin-top: 25px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color:
+        #77716a;
+}
+
+
+/* =========================================
+   FINAL SIGNATURE
+========================================= */
+
+.future-signature {
+
+    margin-top: 12px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 9px;
+
+    letter-spacing: 2px;
+
+    direction: ltr;
+
+    color:
+        #5e5953;
+}
+
+
+/* =========================================
+   MEMORY VIEW
+========================================= */
+
+.memory-view {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 40;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        30px;
+
+    background:
+        rgba(247, 246, 243, 0.82);
+
+    backdrop-filter:
+        blur(7px);
+
+    -webkit-backdrop-filter:
+        blur(7px);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.5s ease;
+}
+
+
+.memory-view.show {
+
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+.memory-view-card {
+
+    width: min(
+        470px,
+        100%
+    );
+
+    padding:
+        35px
+        25px;
+
+    text-align: center;
+
+    background:
+        rgba(255, 255, 255, 0.72);
+
+    border-top:
+        1px solid
+        rgba(117, 99, 84, 0.18);
+
+    border-bottom:
+        1px solid
+        rgba(117, 99, 84, 0.18);
+
+    transform:
+        translateY(15px);
+
+    transition:
+        transform 0.6s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+.memory-view.show .memory-view-card {
+
+    transform:
+        translateY(0);
+}
+
+
+.memory-view-label {
+
+    margin-bottom: 25px;
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 9px;
+
+    letter-spacing: 3px;
+
+    direction: ltr;
+
+    color:
+        var(--brown);
+}
+
+
+.memory-old-message {
+
+    color:
+        #282522;
+
+    font-size: 15px;
+
+    line-height: 2.1;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: break-word;
+}
+
+
+.memory-close {
+
+    margin-top: 27px;
+
+    padding:
+        7px
+        20px;
+
+    border:
+        1px solid #d1cbc3;
+
+    border-radius: 2px;
+
+    background:
+        rgba(255, 255, 255, 0.7);
+
+    color:
+        #4b4843;
+
+    font-family:
+        "Cairo",
+        sans-serif;
+
+    font-size: 9px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================
+   TABLET / DESKTOP
+========================================= */
+
+@media (min-width: 700px) {
+
+    :root {
+
+        --board-size: 440px;
+    }
+
+
+    .intro h1 {
+
+        font-size: 27px;
+    }
+
+
+    .greeting-card {
+
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+}
+
+
+/* =========================================
+   SHORT SCREENS
+========================================= */
+
+@media (max-height: 700px) {
+
+    .intro {
+
+        top: 12%;
+    }
+
+
+    .chess-section {
+
+        top: 26%;
+    }
+
+
+    .checkmate {
+
+        top: calc(
+            26% +
+            var(--board-size) +
+            18px
+        );
+    }
+
+
+    .greeting {
+
+        padding-top: 65px;
+    }
+
+
+    .greeting-card {
+
+        padding-top: 28px;
+        padding-bottom: 26px;
+    }
+
+
+    .message {
+
+        line-height: 2;
+    }
+
+
+    .future-letter-inner {
+
+        padding-top: 25px;
+        padding-bottom: 25px;
+    }
+
+
+    .future-date {
+
+        margin-bottom: 14px;
+    }
+
+
+    .future-divider {
+
+        margin-top: 17px;
+        margin-bottom: 17px;
+    }
+
+
+    .future-reflection {
+
+        margin-top: 15px;
+    }
+}
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
+@media (max-width: 480px) {
+
+    .card-flower {
+
+        width: 60px;
+    }
+
+
+    .top-left-flower {
+
+        top: -18px;
+
+        left: -12px;
+    }
+
+
+    .bottom-right-flower {
+
+        bottom: -18px;
+
+        right: -12px;
+    }
+
+
+    .future-intro h2 {
+
+        font-size: 21px;
+    }
+
+
+    .future-input-wrap {
+
+        margin-top: 24px;
+    }
+
+
+    .future-memory {
+
+        margin-top: 25px;
+    }
+
+
+    .future-letter-inner {
+
+        padding:
+            28px
+            19px;
+    }
+
+
+    .future-user-message {
+
+        font-size: 14px;
+
+        line-height: 2;
+    }
+
+
+    .future-fixed {
+
+        font-size: 11.5px;
+
+        line-height: 2;
+    }
+
+
+    .future-reflection {
+
+        font-size: 9.5px;
+    }
+}
+
+
+/* =========================================
+   REDUCED MOTION
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            0.01ms !important;
+
+        transition-duration:
+            0.01ms !important;
+    }
+}
